@@ -1,0 +1,15 @@
+diff --git a/node_modules/@react-pdf/fontkit/lib/fontkit.cjs.js b/node_modules/@react-pdf/fontkit/lib/fontkit.cjs.js
+index 2b26047..4ffdf1c 100644
+--- a/node_modules/@react-pdf/fontkit/lib/fontkit.cjs.js
++++ b/node_modules/@react-pdf/fontkit/lib/fontkit.cjs.js
+@@ -36698,8 +36698,8 @@ class CFFGlyph extends Glyph {
+ 
+             case 10:
+               // callsubr
+-              let index = stack.pop() + subrsBias;
+-              let subr = subrs[index];
++              var index = stack.pop() + subrsBias;
++              var subr = subrs[index];
+ 
+               if (subr) {
+                 usedSubrs[index] = true;

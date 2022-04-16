@@ -1,0 +1,60 @@
+@font-face {
+  font-family: "display";
+  src: url("/fonts/fieldwork-100.woff2") format("woff2");
+  font-display: swap;
+  font-style: normal;
+  font-weight: 100;
+}
+
+@font-face {
+  font-family: "display";
+  src: url("/fonts/fieldwork-200.woff2") format("woff2");
+  font-display: swap;
+  font-style: normal;
+  font-weight: 200;
+}
+@font-face {
+  font-family: "display";
+  src: url("/fonts/fieldwork-300.woff2") format("woff2");
+  font-display: swap;
+  font-style: normal;
+  font-weight: 300;
+}
+
+@font-face {
+  font-family: "display";
+  src: url("/fonts/fieldwork-400.woff2") format("woff2");
+  font-display: swap;
+  font-style: normal;
+  font-weight: 400;
+}
+@font-face {
+  font-family: "display";
+  src: url("/fonts/fieldwork-600.woff2") format("woff2");
+  font-display: swap;
+  font-style: normal;
+  font-weight: 600;
+}
+
+@font-face {
+  font-family: "display";
+  src: url("/fonts/fieldwork-700.woff2") format("woff2");
+  font-display: swap;
+  font-style: normal;
+  font-weight: 700;
+}
+@font-face {
+  font-family: "display";
+  src: url("/fonts/fieldwork-800.woff2") format("woff2");
+  font-display: swap;
+  font-style: normal;
+  font-weight: 800;
+}
+
+@font-face {
+  font-family: "display";
+  src: url("/fonts/fieldwork-900.woff2") format("woff2");
+  font-display: swap;
+  font-style: normal;
+  font-weight: 900;
+}
