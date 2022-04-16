@@ -8,6 +8,7 @@ import {
   Font,
 } from "@react-pdf/renderer";
 import type { LoaderFunction } from "@remix-run/node";
+import { ReactNode } from "react";
 
 // Specify the path to the public fonts folder
 
@@ -74,14 +75,32 @@ const styles = StyleSheet.create({
     color: "#556370",
     marginBottom: 2,
   },
-  neutral6: {
+  neutral5: {
     color: "#556370",
+  },
+  neutral7: {
+    color: "#35434E",
   },
   neutral9: {
     color: "#1C252C",
   },
+  success: {
+    color: "#00A179",
+  },
+  caution: {
+    color: "#F4AB37",
+  },
+  whiteBg: {
+    backgroundColor: "#FFF",
+  },
+  neutralBg: {
+    backgroundColor: "#F2F4F6",
+  },
   contentWrapper: {
     minWidth: "44%",
+  },
+  fullWidthContainer: {
+    width: "96%",
   },
   textContainer: {
     flexDirection: "column",
@@ -92,8 +111,17 @@ const styles = StyleSheet.create({
   bold: {
     fontWeight: 700,
   },
-  sm: {
+  xxs: {
+    fontSize: 11,
+  },
+  xs: {
     fontSize: 12,
+  },
+  sm: {
+    fontSize: 13,
+  },
+  base: {
+    fontSize: 14,
   },
   lg: {
     fontSize: 16,
@@ -112,9 +140,51 @@ const styles = StyleSheet.create({
   },
 });
 
+function LabelWrapper({
+  children,
+  label,
+}: {
+  children: ReactNode;
+  label: string;
+}) {
+  return (
+    <Text style={[styles.neutral5, styles.xs, { textTransform: "uppercase" }]}>
+      {label}
+      {children}
+    </Text>
+  );
+}
+
+function TableLabel({
+  children,
+  style = [],
+}: {
+  children: ReactNode;
+  style?: any;
+}) {
+  let normalizedStyles = [];
+
+  if (style.length >= 1) {
+    normalizedStyles.push(...style);
+  } else {
+    normalizedStyles.push(style);
+  }
+
+  let combinedStyles = [
+    styles.neutral9,
+    styles.xxs,
+    styles.semibold,
+    { textTransform: "uppercase" },
+    ...normalizedStyles,
+  ];
+
+  return <Text style={combinedStyles}>{children}</Text>;
+}
+
 // Create Document Component
 function PDFDemo() {
   let orderId = sampleServiceOrderData?.orderId;
+  let jobStatus = sampleServiceOrderData?.jobStatus;
   console.log({
     sampleServiceOrderDataId: sampleServiceOrderData?.orderId ?? "no data",
   });
@@ -126,18 +196,40 @@ function PDFDemo() {
   console.log({ orderId });
 
   return (
-    <Document>
+    <Document title={`Service Order MJ${orderId}`}>
       <Page size="A4" style={styles.page}>
         <View>
           <Text style={[styles.docTitle, { minWidth: "46%" }]}>
             Service Order
           </Text>
-          <Text style={[styles.neutral6, styles.sm]}>
-            ID:
+          <LabelWrapper label="ID:">
             <Text
-              style={[styles.semibold, styles.lg, styles.neutral9]}
+              style={[
+                styles.semibold,
+                styles.lg,
+                styles.neutral9,
+                { textTransform: "capitalize" },
+              ]}
             >{`  MJ${orderId}`}</Text>
-          </Text>
+          </LabelWrapper>
+
+          <LabelWrapper label="Status:">
+            <Text
+              style={[
+                styles.bold,
+                styles.lg,
+                styles.neutral9,
+                { textTransform: "capitalize" },
+                jobStatus === "Complete"
+                  ? { ...styles.success }
+                  : jobStatus === "Pending"
+                  ? { ...styles.caution }
+                  : { ...styles.neutral9 },
+              ]}
+            >
+              {`  ${jobStatus}`}
+            </Text>
+          </LabelWrapper>
         </View>
         <View style={styles.sectionSpacer}></View>
 
@@ -200,16 +292,15 @@ function PDFDemo() {
             {sampleServiceOrderData.workPerformed.map((work) => {
               if (sampleServiceOrderData.workPerformed.length > 1) {
                 return (
-                  <View style={[styles.mb]} key={work.date}>
+                  <View style={[styles.mb, styles.neutral7]} key={work.date}>
                     <Text style={[styles.bold]}>{work.date}</Text>
-                    <Text>{work.description}</Text>
+                    <Text style={styles.sm}>{work.description}</Text>
                   </View>
                 );
               } else {
                 return (
-                  <View key={work.date}>
-                    {/* <Text style={styles.bold}>{work.field}</Text> */}
-                    <Text>{work.description}</Text>
+                  <View style={styles.mb} key={work.date}>
+                    <Text style={styles.sm}>{work.description}</Text>
                   </View>
                 );
               }
@@ -219,11 +310,185 @@ function PDFDemo() {
         <View style={styles.sectionSpacer}></View>
 
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Parts Used</Text>
+          <Text style={[styles.sectionTitle, { marginBottom: 10 }]}>
+            Parts Used
+          </Text>
+          <View
+            style={[
+              styles.fullWidthContainer,
+              {
+                backgroundColor: "#DFE4E7",
+                flexDirection: "row",
+                padding: 6,
+                paddingHorizontal: 10,
+              },
+            ]}
+          >
+            <TableLabel style={[{ minWidth: "32%" }]}>Part #</TableLabel>
+            <TableLabel style={{ minWidth: "40%" }}>Description</TableLabel>
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "flex-end",
+                minWidth: "6%",
+              }}
+            >
+              <TableLabel>Qty</TableLabel>
+            </View>
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "flex-end",
+                minWidth: "16%",
+              }}
+            >
+              <TableLabel>Source</TableLabel>
+            </View>
+          </View>
+          {sampleServiceOrderData.partsUsed.map((part, index) => {
+            const isEven = index % 2 === 0;
+
+            return (
+              <View
+                style={[
+                  styles.fullWidthContainer,
+                  {
+                    flexDirection: "row",
+                    padding: 6,
+                    paddingHorizontal: 10,
+                  },
+                  isEven ? styles.whiteBg : styles.neutralBg,
+                ]}
+              >
+                <TableField style={[{ minWidth: "32%" }]}>
+                  {part.partNumber}
+                </TableField>
+                <TableField style={{ minWidth: "40%" }}>
+                  {part.description}
+                </TableField>
+                <View
+                  style={{
+                    minWidth: "6%",
+                    flexDirection: "row",
+                    justifyContent: "flex-end",
+                  }}
+                >
+                  <TableField>{part.quantity}</TableField>
+                </View>
+                <View
+                  style={{
+                    minWidth: "16%",
+                    flexDirection: "row",
+                    justifyContent: "flex-end",
+                  }}
+                >
+                  <TableField>{part.source}</TableField>
+                </View>
+              </View>
+            );
+          })}
+        </View>
+        <View style={styles.sectionSpacer} />
+        <View style={styles.section} wrap={false}>
+          <Text style={[styles.sectionTitle, { marginBottom: 10 }]}>Labor</Text>
+          <View
+            style={[
+              styles.fullWidthContainer,
+              {
+                backgroundColor: "#DFE4E7",
+                flexDirection: "row",
+                padding: 6,
+                paddingHorizontal: 10,
+              },
+            ]}
+          >
+            <TableLabel style={[{ minWidth: "32%" }]}>Part #</TableLabel>
+            <TableLabel style={{ minWidth: "40%" }}>Description</TableLabel>
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "flex-end",
+                minWidth: "6%",
+              }}
+            >
+              <TableLabel>Qty</TableLabel>
+            </View>
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "flex-end",
+                minWidth: "16%",
+              }}
+            >
+              <TableLabel>Source</TableLabel>
+            </View>
+          </View>
+          {sampleServiceOrderData.partsUsed.map((part, index) => {
+            const isEven = index % 2 === 0;
+
+            return (
+              <View
+                style={[
+                  styles.fullWidthContainer,
+                  {
+                    flexDirection: "row",
+                    padding: 6,
+                    paddingHorizontal: 10,
+                  },
+                  isEven ? styles.whiteBg : styles.neutralBg,
+                ]}
+              >
+                <TableField style={[{ minWidth: "32%" }]}>
+                  {part.partNumber}
+                </TableField>
+                <TableField style={{ minWidth: "40%" }}>
+                  {part.description}
+                </TableField>
+                <View
+                  style={{
+                    minWidth: "6%",
+                    flexDirection: "row",
+                    justifyContent: "flex-end",
+                  }}
+                >
+                  <TableField>{part.quantity}</TableField>
+                </View>
+                <View
+                  style={{
+                    minWidth: "16%",
+                    flexDirection: "row",
+                    justifyContent: "flex-end",
+                  }}
+                >
+                  <TableField>{part.source}</TableField>
+                </View>
+              </View>
+            );
+          })}
         </View>
       </Page>
     </Document>
   );
+}
+
+function TableField({
+  children,
+  style = [],
+}: {
+  children: ReactNode;
+  style?: any;
+}) {
+  let normalizedStyles = [];
+
+  if (style.length >= 1) {
+    normalizedStyles.push(...style);
+  } else {
+    normalizedStyles.push(style);
+  }
+
+  let combinedStyles = [styles.neutral9, styles.xs, ...normalizedStyles];
+
+  return <Text style={combinedStyles}>{children}</Text>;
 }
 
 export let loader: LoaderFunction = async ({ request, params }) => {
@@ -254,6 +519,7 @@ export let loader: LoaderFunction = async ({ request, params }) => {
 
 const sampleServiceOrderData = {
   orderId: "1",
+  jobStatus: "Complete",
   clientDetails: [
     {
       field: "Client Name",
@@ -299,14 +565,22 @@ const sampleServiceOrderData = {
   ],
   partsUsed: [
     {
-      field: "1-70-101087-81 Combustion Blower Motor",
+      partNumber: "1-70-101087-81",
+      description: "Combustion Blower Motor",
       quantity: 1,
       source: "ISC",
     },
     {
-      field: "16*25*1 Pleated Filter",
+      partNumber: "C-083S",
+      description: "Filter/Drier",
       quantity: 1,
-      source: "Home Hardware",
+      source: "RSL",
+    },
+    {
+      partNumber: "Not Available",
+      description: "16*25*1 Pleated Filter",
+      quantity: 2,
+      source: "HH",
     },
   ],
   labor: [
