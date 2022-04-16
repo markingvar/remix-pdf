@@ -1,8 +1,8 @@
 {
-  "name": "remix-template-remix",
+  "name": "remix-pdf",
   "private": true,
-  "description": "",
-  "license": "",
+  "description": "Use Remix and React PDF to dynamically generate PDFs",
+  "license": "MIT",
   "sideEffects": false,
   "scripts": {
     "build": "remix build",
