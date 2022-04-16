@@ -1,6 +1,6 @@
-# Welcome to Remix!
+# Remix PDF
 
-- [Remix Docs](https://remix.run/docs)
+Use Remix and React PDF to dynamically generate and display PDFs using custom fonts and styling.
 
 ## Development
 
@@ -51,4 +51,5 @@ rm -rf app
 # copy your app over
 cp -R ../my-old-remix-app/app app
 ```
+
 # remix-pdf
