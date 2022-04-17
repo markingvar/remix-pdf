@@ -97,10 +97,13 @@ const styles = StyleSheet.create({
     backgroundColor: "#F2F4F6",
   },
   contentWrapper: {
-    minWidth: "44%",
+    minWidth: "45%",
   },
   fullWidthContainer: {
-    width: "96%",
+    width: "100%",
+  },
+  halfWidthContainer: {
+    width: "46%",
   },
   textContainer: {
     flexDirection: "column",
@@ -233,60 +236,56 @@ function PDFDemo() {
         </View>
         <View style={styles.sectionSpacer}></View>
 
-        <View style={styles.flexRow}>
-          <View style={styles.section}>
-            <View style={styles.contentWrapper}>
-              <Text style={styles.sectionTitle}>Client Details</Text>
-              <View style={styles.textContainer}>
-                {sampleServiceOrderData.clientDetails.map((client) => {
-                  if (client.field === "Client Name") {
-                    return (
-                      <Text style={[styles.bold, styles.xl]} key={client.field}>
+        <View style={[styles.section, { justifyContent: "space-between" }]}>
+          <View style={styles.halfWidthContainer}>
+            <Text style={styles.sectionTitle}>Client Details</Text>
+            <View style={styles.textContainer}>
+              {sampleServiceOrderData.clientDetails.map((client) => {
+                if (client.field === "Client Name") {
+                  return (
+                    <Text style={[styles.bold, styles.lg]} key={client.field}>
+                      {client.value}
+                    </Text>
+                  );
+                } else if (
+                  client.field === "Site Contact" &&
+                  client.value.length >= 2
+                ) {
+                  return (
+                    <View>
+                      <Text style={styles.semibold} key={client.field}>
                         {client.value}
                       </Text>
-                    );
-                  } else if (
-                    client.field === "Site Contact" &&
-                    client.value.length >= 2
-                  ) {
-                    return (
-                      <View>
-                        <Text style={styles.semibold} key={client.field}>
-                          {client.value}
-                        </Text>
-                      </View>
-                    );
-                  } else {
-                    return <Text key={client.field}>{client.value}</Text>;
-                  }
-                })}
-              </View>
+                    </View>
+                  );
+                } else {
+                  return <Text key={client.field}>{client.value}</Text>;
+                }
+              })}
             </View>
-            {sampleServiceOrderData.billingDetails.length >= 1 && (
-              <View>
-                <Text style={styles.sectionTitle}>Billing Info</Text>
-                {sampleServiceOrderData.billingDetails.map((billing) => {
-                  if (billing.field === "Billing Method") {
-                    return (
-                      <Text
-                        key={billing.field}
-                        style={[styles.bold, styles.lg]}
-                      >
-                        {billing.value}
-                      </Text>
-                    );
-                  } else {
-                    return <Text key={billing.field}>{billing.value}</Text>;
-                  }
-                })}
-              </View>
-            )}
           </View>
+          {sampleServiceOrderData.billingDetails.length >= 1 && (
+            <View style={styles.halfWidthContainer}>
+              <Text style={styles.sectionTitle}>Billing Info</Text>
+              {sampleServiceOrderData.billingDetails.map((billing) => {
+                if (billing.field === "Billing Method") {
+                  return (
+                    <Text key={billing.field} style={[styles.bold, styles.lg]}>
+                      {billing.value}
+                    </Text>
+                  );
+                } else {
+                  return <Text key={billing.field}>{billing.value}</Text>;
+                }
+              })}
+            </View>
+          )}
         </View>
+
         <View style={styles.sectionSpacer}></View>
 
         <View style={styles.section}>
-          <View style={[{ maxWidth: "78%" }]}>
+          <View style={[{ maxWidth: "64%" }]}>
             <Text style={styles.sectionTitle}>Work Performed</Text>
             <View style={{ paddingTop: 2 }} />
             {sampleServiceOrderData.workPerformed.map((work) => {
@@ -330,7 +329,7 @@ function PDFDemo() {
               style={{
                 flexDirection: "row",
                 justifyContent: "flex-end",
-                minWidth: "6%",
+                minWidth: "8%",
               }}
             >
               <TableLabel>Qty</TableLabel>
@@ -339,7 +338,7 @@ function PDFDemo() {
               style={{
                 flexDirection: "row",
                 justifyContent: "flex-end",
-                minWidth: "16%",
+                minWidth: "18%",
               }}
             >
               <TableLabel>Source</TableLabel>
@@ -350,6 +349,7 @@ function PDFDemo() {
 
             return (
               <View
+                key={part.partNumber}
                 style={[
                   styles.fullWidthContainer,
                   {
@@ -368,7 +368,7 @@ function PDFDemo() {
                 </TableField>
                 <View
                   style={{
-                    minWidth: "6%",
+                    minWidth: "8%",
                     flexDirection: "row",
                     justifyContent: "flex-end",
                   }}
@@ -377,7 +377,7 @@ function PDFDemo() {
                 </View>
                 <View
                   style={{
-                    minWidth: "16%",
+                    minWidth: "18%",
                     flexDirection: "row",
                     justifyContent: "flex-end",
                   }}
@@ -402,32 +402,25 @@ function PDFDemo() {
               },
             ]}
           >
-            <TableLabel style={[{ minWidth: "32%" }]}>Part #</TableLabel>
-            <TableLabel style={{ minWidth: "40%" }}>Description</TableLabel>
+            <TableLabel style={[{ minWidth: "28%" }]}>Date</TableLabel>
+            <TableLabel style={{ minWidth: "28%" }}>Tech</TableLabel>
+            <TableLabel style={{ minWidth: "24%" }}>Rate</TableLabel>
             <View
               style={{
                 flexDirection: "row",
                 justifyContent: "flex-end",
-                minWidth: "6%",
+                minWidth: "18%",
               }}
             >
-              <TableLabel>Qty</TableLabel>
-            </View>
-            <View
-              style={{
-                flexDirection: "row",
-                justifyContent: "flex-end",
-                minWidth: "16%",
-              }}
-            >
-              <TableLabel>Source</TableLabel>
+              <TableLabel>Hours</TableLabel>
             </View>
           </View>
-          {sampleServiceOrderData.partsUsed.map((part, index) => {
+          {sampleServiceOrderData.labor.map((labor, index) => {
             const isEven = index % 2 === 0;
 
             return (
               <View
+                key={`${labor.date}-${labor.technician}`}
                 style={[
                   styles.fullWidthContainer,
                   {
@@ -438,34 +431,192 @@ function PDFDemo() {
                   isEven ? styles.whiteBg : styles.neutralBg,
                 ]}
               >
-                <TableField style={[{ minWidth: "32%" }]}>
-                  {part.partNumber}
+                <TableField style={[{ minWidth: "28%" }]}>
+                  {labor.date}
                 </TableField>
-                <TableField style={{ minWidth: "40%" }}>
-                  {part.description}
+                <TableField style={{ minWidth: "28%" }}>
+                  {labor.technician}
+                </TableField>
+                <TableField style={{ minWidth: "24%" }}>
+                  {labor.rate}
                 </TableField>
                 <View
                   style={{
-                    minWidth: "6%",
+                    minWidth: "18%",
                     flexDirection: "row",
                     justifyContent: "flex-end",
                   }}
                 >
-                  <TableField>{part.quantity}</TableField>
-                </View>
-                <View
-                  style={{
-                    minWidth: "16%",
-                    flexDirection: "row",
-                    justifyContent: "flex-end",
-                  }}
-                >
-                  <TableField>{part.source}</TableField>
+                  <TableField>{labor.hours}</TableField>
                 </View>
               </View>
             );
           })}
         </View>
+        <View style={styles.sectionSpacer}></View>
+        {sampleServiceOrderData.shopSupplies.length > 0 ||
+        sampleServiceOrderData.otherCharges.length > 0 ? (
+          <>
+            <View style={styles.sectionSpacer}></View>
+
+            <View
+              wrap={false}
+              style={[
+                styles.section,
+                { justifyContent: "space-between", flexDirection: "row" },
+              ]}
+            >
+              {sampleServiceOrderData.shopSupplies.length > 0 && (
+                <View style={styles.contentWrapper}>
+                  <Text style={[styles.sectionTitle, { marginBottom: 10 }]}>
+                    Shop Supplies
+                  </Text>
+                  <View
+                    style={[
+                      {
+                        backgroundColor: "#DFE4E7",
+                        flexDirection: "row",
+                        padding: 6,
+                        paddingHorizontal: 10,
+                      },
+                    ]}
+                  >
+                    <View style={[{ flexGrow: 5 }]}>
+                      <TableLabel>Item</TableLabel>
+                    </View>
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        justifyContent: "flex-end",
+                        flexGrow: 1,
+                      }}
+                    >
+                      <TableLabel>Qty</TableLabel>
+                    </View>
+                  </View>
+                  {sampleServiceOrderData.shopSupplies.map((supply, index) => {
+                    const isEven = index % 2 === 0;
+
+                    return (
+                      <View
+                        key={supply.item}
+                        style={[
+                          {
+                            flexDirection: "row",
+                            padding: 6,
+                            paddingHorizontal: 10,
+                          },
+                          isEven ? styles.whiteBg : styles.neutralBg,
+                        ]}
+                      >
+                        <View
+                          style={[
+                            {
+                              flexGrow: 5,
+                            },
+                          ]}
+                        >
+                          <TableField>{supply.item}</TableField>
+                        </View>
+
+                        <View
+                          style={{
+                            flexGrow: 1,
+                            flexDirection: "row",
+                            justifyContent: "flex-end",
+                          }}
+                        >
+                          <TableField>{supply.quantity}</TableField>
+                        </View>
+                      </View>
+                    );
+                  })}
+                </View>
+              )}
+              {sampleServiceOrderData.otherCharges.length >= 1 && (
+                <View style={[styles.contentWrapper]}>
+                  <Text style={[styles.sectionTitle, { marginBottom: 10 }]}>
+                    Other Charges
+                  </Text>
+                  <View
+                    style={[
+                      {
+                        width: "100%",
+                        backgroundColor: "#DFE4E7",
+                        flexDirection: "row",
+                        padding: 6,
+                        paddingHorizontal: 10,
+                      },
+                    ]}
+                  >
+                    <View style={{ flexGrow: 4 }}>
+                      <TableLabel>Item</TableLabel>
+                    </View>
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        justifyContent: "flex-end",
+                        flexGrow: 1,
+                      }}
+                    >
+                      <TableLabel>Amount</TableLabel>
+                    </View>
+                  </View>
+                  {sampleServiceOrderData.otherCharges.map(
+                    (otherCharge, index) => {
+                      const isEven = index % 2 === 0;
+
+                      return (
+                        <View
+                          key={otherCharge.item}
+                          style={[
+                            {
+                              flexDirection: "row",
+                              padding: 6,
+                              paddingHorizontal: 10,
+                            },
+                            isEven ? styles.whiteBg : styles.neutralBg,
+                          ]}
+                        >
+                          <View
+                            style={[
+                              {
+                                flexGrow: 4,
+                              },
+                            ]}
+                          >
+                            <TableField>{otherCharge.item}</TableField>
+                          </View>
+
+                          <View
+                            style={{
+                              flexGrow: 1,
+                              flexDirection: "row",
+                              justifyContent: "flex-end",
+                            }}
+                          >
+                            <TableField>{otherCharge.amount}</TableField>
+                          </View>
+                        </View>
+                      );
+                    }
+                  )}
+                </View>
+              )}
+            </View>
+
+            <View style={styles.sectionSpacer}></View>
+          </>
+        ) : null}
+        {sampleServiceOrderData.otherNotes.length > 5 && (
+          <View wrap={false} style={styles.section}>
+            <View style={[{ maxWidth: "64%" }]}>
+              <Text style={styles.sectionTitle}>Other Notes</Text>
+              <View style={{ paddingTop: 2 }} />
+              <Text style={styles.sm}>{sampleServiceOrderData.otherNotes}</Text>
+            </View>
+          </View>
+        )}
       </Page>
     </Document>
   );
@@ -584,8 +735,8 @@ const sampleServiceOrderData = {
     },
   ],
   labor: [
-    { date: "Nov 15/21", hours: 1.5, technician: "Mark" },
-    { date: "Nov 17/21", hours: 2, technician: "Mark" },
+    { date: "Nov 15/21", hours: 1.5, rate: "Overtime", technician: "Mark" },
+    { date: "Nov 17/21", hours: 2, rate: "Standard", technician: "Mark" },
   ],
   shopSupplies: [
     { item: "Vacuum Pump Rental", quantity: 1 },
@@ -593,7 +744,9 @@ const sampleServiceOrderData = {
     { item: "SilFos", quantity: 3 },
   ],
   otherCharges: [
-    { item: "Freight", amount: "" },
+    { item: "Freight", amount: "TBD" },
     { item: "Mileage", amount: "246km" },
   ],
+  otherNotes:
+    "Recommend replacement of unit, lots of wear on the starboard side of the system.",
 };
