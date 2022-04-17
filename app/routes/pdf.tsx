@@ -8,7 +8,7 @@ import {
   Font,
 } from "@react-pdf/renderer";
 import type { LoaderFunction } from "@remix-run/node";
-import { ReactNode } from "react";
+import type { ReactNode } from "react";
 
 // Specify the path to the public fonts folder
 
@@ -88,7 +88,7 @@ const styles = StyleSheet.create({
     color: "#00A179",
   },
   caution: {
-    color: "#F4AB37",
+    color: "#E1862C",
   },
   whiteBg: {
     backgroundColor: "#FFF",
@@ -231,6 +231,18 @@ function PDFDemo() {
               ]}
             >
               {`  ${jobStatus}`}
+              {jobStatus === "Pending" && (
+                <Text
+                  style={[
+                    styles.neutral7,
+                    styles.xs,
+                    styles.caution,
+                    { fontWeight: 600 },
+                  ]}
+                >
+                  {`   ${sampleServiceOrderData.jobPendingReason}`}
+                </Text>
+              )}
             </Text>
           </LabelWrapper>
         </View>
@@ -670,7 +682,9 @@ export let loader: LoaderFunction = async ({ request, params }) => {
 
 const sampleServiceOrderData = {
   orderId: "1",
-  jobStatus: "Complete",
+  // jobStatus: "Complete",
+  jobStatus: "Pending",
+  jobPendingReason: "Parts on order",
   clientDetails: [
     {
       field: "Client Name",
